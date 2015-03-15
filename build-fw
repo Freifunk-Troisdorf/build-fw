@@ -46,22 +46,26 @@ case $buildorsign in
                 case $branch in
                         beta*|b*)
                                 cd /home/gluon/gluon/
+                                git pull
+                                git checkout 2014.4.x
                                 echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
                                 read version
                                 make update
                                 make clean
-                                make -j5 GLUON_BRANCH=beta DEFAULT_GLUON_RELEASE=2014.4-beta-$version
+                                make -j5 GLUON_BRANCH=beta GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-beta-$version
                                 make manifest GLUON_BRANCH=beta
                                 rm -rf /home/gluon/firmware/beta
                                 cp -r /home/gluon/gluon/images /home/gluon/firmware/beta
                                 chmod 775 -R /home/gluon/firmware;;
                         stable*|s*) echo stable
                                 cd /home/gluon/gluon/
+                                git pull
+                                git checkout 2014.4.x
                                 echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
                                 read version
                                 make update
                                 make clean
-                                make -j5 GLUON_BRANCH=stable DEFAULT_GLUON_RELEASE=2014.4-stable-$version
+                                make -j5 GLUON_BRANCH=stable GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-stable-$version
                                 make manifest GLUON_BRANCH=stable
                                 rm -rf /home/gluon/firmware/stable
                                 cp -r /home/gluon/gluon/images /home/gluon/firmware/stable
@@ -71,11 +75,17 @@ case $buildorsign in
                                 chmod 775 -R /home/gluon/firmware;;
                         experimental*|e*) echo experimental
                                 cd /home/gluon/gluon/
+                                git pull
+                                git checkout master
                                 echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
                                 read version
                                 make update
-                                make clean
-                                make -j5 GLUON_BRANCH=experimental DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                make clean GLUON_TARGET=ar71xx-generic
+                                make clean GLUON_TARGET=x86-generic
+                                make clean GLUON_TARGET=x86-kvm_guest
+                                make -j5 GLUON_BRANCH=experimental GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                make -j5 GLUON_BRANCH=experimental GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                make -j5 GLUON_BRANCH=experimental GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
                                 make manifest GLUON_BRANCH=experimental
                                 rm -rf /home/gluon/firmware/experimental
                                 cp -r /home/gluon/gluon/images /home/gluon/firmware/experimental
