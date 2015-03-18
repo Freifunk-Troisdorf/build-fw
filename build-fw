@@ -56,7 +56,7 @@ case $buildorsign in
                                 cd ../
                                 make update
                                 make clean
-                                make -j5 GLUON_BRANCH=beta DEFAULT_GLUON_RELEASE=2014.4-beta-$version
+                                make -j5 GLUON_BRANCH=beta GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-beta-$version
                                 make manifest GLUON_BRANCH=beta
                                 rm -rf /home/gluon/firmware/beta
                                 cp -r /home/gluon/gluon/images /home/gluon/firmware/beta
@@ -73,7 +73,7 @@ case $buildorsign in
                                 cd ../
                                 make update
                                 make clean
-                                make -j5 GLUON_BRANCH=stable DEFAULT_GLUON_RELEASE=2014.4-stable-$version
+                                make -j5 GLUON_BRANCH=stable GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-stable-$version
                                 make manifest GLUON_BRANCH=stable
                                 rm -rf /home/gluon/firmware/stable
                                 cp -r /home/gluon/gluon/images /home/gluon/firmware/stable
