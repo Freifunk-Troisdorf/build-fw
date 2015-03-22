@@ -1,38 +1,40 @@
+# Benutzerabfragen
 echo -e "Freifunk Firmware Tool\n"
+echo -e "Community Wählen:\n"
+echo -e "[T]roisdorf oder [H]ennef:"
+read imput_community
 echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder [c]leaning:"
-read buildorsign
-case $buildorsign in
-        freigeben*|f*)
-                if [ "$USER" != "gluon" ] 
-                        then echo "Keine Berechtigung. Der Benutzer $USER ist nicht Berechtigt die Firmware freizugeben!" 
-                        exit 1
-                        else echo "User Gluon erkannt!"
-                fi
-                echo "Firmware wird nun auf die Update Server verteilt"
-                rsync -aP --delete  /home/gluon/firmware root@10.0.0.75:/var/www/images.freifunk-troisdorf.de
-                rsync -aP --delete --exclude=/latest  /home/gluon/firmware/ fwupload@update2.infra.fftdf:~/www;;
-
-        signieren*|s*)
-                echo "Branch auswählen (stable/beta/experimental): "
-                read branch
-                case $branch in
-                        beta*|b*)
-                                /home/gluon/gluon/contrib/sign.sh ~/firmwarekey /home/gluon/firmware/beta/sysupgrade/beta.manifest;;
-                        stable*|s*)
-                                /home/gluon/gluon/contrib/sign.sh ~/firmwarekey /home/gluon/firmware/stable/sysupgrade/stable.manifest;;
-                        experimental*|e*)
-                                /home/gluon/gluon/contrib/sign.sh ~/firmwarekey /home/gluon/firmware/experimental/sysupgrade/experimental.manifest;;
-                esac
-                echo -e "\n$branch Firmware wurde signiert.";;
-        clean*|c*)
-                if [ "$USER" != "gluon" ] 
-                        then echo "Keine Berechtigung" 
-                        exit 1
-                        else echo "User Gluon erkannt!"
-                fi
-                cd /home/gluon/gluon/
-                make dirclean
-                echo "Cleanup Complete";; 
+read imput_feature
+echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
+read imput_branch
+echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
+read imput_version
+# Bedingungen setzen
+case $imput_community in
+        troisdorf*|t*)
+                community=troisdorf
+                gluon_pfad=/home/gluon/gluon/
+                firmware_pfad_unsigned=/home/gluon/firmware-unsigned-troisdorf/
+                firmware_pfad_signed=/home/gluon/firmware-signed-troisdorf/;;
+        hennef*|h*)
+                community=hennef
+                gluon_pfad=/home/gluon/gluon-hennef/
+                firmware_pfad_unsigned=/home/gluon/firmware-unsigned-hennef/
+                firmware_pfad_signed=/home/gluon/firmware-signed-hennef/;;
+esac
+case $imput_branch in
+        stable*|s*)
+                gluon_version=2014.4.x
+                branch=stable;;
+        beta*|b*)
+                gluon_version=2014.4.x
+                branch=beta;;
+        experimental*|e*)
+                gluon_version=master
+                branch=experimental;;
+esac
+#Befehle ausführen
+case $imput_feature in
         bauen*|b*)
                 echo "Berechtigung wird geprüft"
                 if [ "$USER" != "gluon" ] 
@@ -40,68 +42,46 @@ case $buildorsign in
                         exit 1
                         else echo "User Gluon erkannt!"
                 fi
-                echo "Branch auswählen (stable/beta/experimental): "
-                read branch
-                echo "Firmware wird im Branch $branch gebaut"
-                case $branch in
-                        beta*|b*)
-                                cd /home/gluon/gluon/
-                                git pull
-                                git checkout 2014.4.x
-                                echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
-                                read version
-                                cd /home/gluon/gluon/site/
-                                git tag -a beta-$version -m 'Version beta-$version'
-                                git push origin --tags
-                                cd ../
-                                make update
-                                make clean
-                                make -j5 GLUON_BRANCH=beta GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-beta-$version
-                                make manifest GLUON_BRANCH=beta
-                                rm -rf /home/gluon/firmware/beta
-                                cp -r /home/gluon/gluon/images /home/gluon/firmware/beta
-                                chmod 775 -R /home/gluon/firmware;;
-                        stable*|s*) echo stable
-                                cd /home/gluon/gluon/
-                                git pull
-                                git checkout 2014.4.x
-                                echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
-                                read version
-                                cd /home/gluon/gluon/site/
-                                git tag -a stable-$version -m 'Version stable-$version'
-                                git push origin --tags
-                                cd ../
-                                make update
-                                make clean
-                                make -j5 GLUON_BRANCH=stable GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-stable-$version
-                                make manifest GLUON_BRANCH=stable
-                                rm -rf /home/gluon/firmware/stable
-                                cp -r /home/gluon/gluon/images /home/gluon/firmware/stable
-                                cp -r /home/gluon/gluon/images /home/gluon/firmware/latest
-                                rename s/$version/latest/g /home/gluon/firmware/latest/factory/*
-                                rename s/$version/latest/g /home/gluon/firmware/latest/sysupgrade/*
-                                chmod 775 -R /home/gluon/firmware;;
-                        experimental*|e*) echo experimental
-                                cd /home/gluon/gluon/
-                                git pull
-                                git checkout master
-                                echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
-                                read version
-                                cd /home/gluon/gluon/site/
-                                git tag -a experimental-$version -m 'Version experimental-$version'
-                                git push origin --tags
-                                cd ../
-                                make update
-                                make clean GLUON_TARGET=ar71xx-generic
-                                make clean GLUON_TARGET=x86-generic
-                                make clean GLUON_TARGET=x86-kvm_guest
-                                make -j5 GLUON_BRANCH=experimental GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
-                                make -j5 GLUON_BRANCH=experimental GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
-                                make -j5 GLUON_BRANCH=experimental GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
-                                make manifest GLUON_BRANCH=experimental
-                                rm -rf /home/gluon/firmware/experimental
-                                cp -r /home/gluon/gluon/images /home/gluon/firmware/experimental
-                                chmod 775 -R /home/gluon/firmware;;
-                esac
-        echo -e "\nFirmware $version wurde gebaut und signiert.";;
+                cd $gluon_pfad
+                git pull
+                git checkout $gluon_version
+                make dirclean
+                make update
+                make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$imput_version
+                if [ branch = experimental ]; then
+                        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$imput_version
+                        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-$branch-$imput_version
+                fi
+                make manifest GLUON_BRANCH=$branch
+                rm -rf "$firmware_pfad_unsigned""$branch"
+                cp -r "$gluon_pfad"images "$firmware_pfad_unsigned""$branch"
+                rm -rf "$gluon_pfad"images
+                chmod 775 -R $firmware_pfad_unsigned;;
+        signieren*|s*)
+                "$gluon_pfad"contrib/sign.sh ~/firmwarekey "$firmware_pfad_unsigned""$branch"/sysupgrade/"$branch".manifest;;
+        freigeben*|f*)
+                if [ "$USER" != "gluon" ] 
+                        then echo "Keine Berechtigung. Der Benutzer $USER ist nicht Berechtigt die Firmware freizugeben!" 
+                        exit 1
+                        else echo "User Gluon erkannt!"
+                fi
+                rm -rf "$firmware_pfad_signed"/"$branch"
+                mv "$firmware_pfad_unsigned"/"$branch" "$firmware_pfad_signed"/"$branch"
+                if [ $community = troisdorf ]
+                        then 
+                                rsync -aP --delete  /home/gluon/firmware-signed-troisdorf/ root@10.0.0.75:/var/www/images.freifunk-troisdorf.de
+                                rsync -aP --delete --exclude=/latest  /home/gluon/firmware-signed-troisdorf/ fwupload@update2.infra.fftdf:~/www
+                elif [ $community = hennef ]
+                        then
+                                rsync -aP --delete  /home/gluon/firmware-signed-hennef/ root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
+                fi;;
+        cleaning*|c*)
+                if [ "$USER" != "gluon" ] 
+                        then echo "Keine Berechtigung" 
+                        exit 1
+                        else echo "User Gluon erkannt!"
+                fi
+                cd $gluon_pfad
+                make dirclean;;                
 esac
+echo -e "Alle Befehle ausgeführt!"
