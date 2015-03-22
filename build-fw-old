@@ -1,0 +1,199 @@
+echo -e "Freifunk Firmware Tool\n"
+echo -e "Community Wählen:\n"
+echo -e "[T]roisdorf oder [H]ennef:"
+read community
+case $community in
+        troisdorf*|t*)
+        echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder [c]leaning:"
+        read buildorsign
+        case $buildorsign in
+                freigeben*|f*)
+                        if [ "$USER" != "gluon" ] 
+                                then echo "Keine Berechtigung. Der Benutzer $USER ist nicht Berechtigt die Firmware freizugeben!" 
+                                exit 1
+                                else echo "User Gluon erkannt!"
+                        fi
+                        echo "Firmware wird nun auf die Update Server verteilt"
+                        rsync -aP --delete  /home/gluon/firmware root@10.0.0.75:/var/www/images.freifunk-troisdorf.de
+                        rsync -aP --delete --exclude=/latest  /home/gluon/firmware/ fwupload@update2.infra.fftdf:~/www;;
+
+                signieren*|s*)
+                        echo "Branch auswählen (stable/beta/experimental): "
+                        read branch
+                        case $branch in
+                                beta*|b*)
+                                        /home/gluon/gluon/contrib/sign.sh ~/firmwarekey /home/gluon/firmware/beta/sysupgrade/beta.manifest;;
+                                stable*|s*)
+                                        /home/gluon/gluon/contrib/sign.sh ~/firmwarekey /home/gluon/firmware/stable/sysupgrade/stable.manifest;;
+                                experimental*|e*)
+                                        /home/gluon/gluon/contrib/sign.sh ~/firmwarekey /home/gluon/firmware/experimental/sysupgrade/experimental.manifest;;
+                        esac
+                        echo -e "\n$branch Firmware wurde signiert.";;
+                clean*|c*)
+                        if [ "$USER" != "gluon" ] 
+                                then echo "Keine Berechtigung" 
+                                exit 1
+                                else echo "User Gluon erkannt!"
+                        fi
+                        cd /home/gluon/gluon/
+                        make dirclean
+                        echo "Cleanup Complete";; 
+                bauen*|b*)
+                        echo "Berechtigung wird geprüft"
+                        if [ "$USER" != "gluon" ] 
+                                then echo "Keine Berechtigung. Der Benutzer $USER ist nicht Berechtigt die Firmware zu bauen!" 
+                                exit 1
+                                else echo "User Gluon erkannt!"
+                        fi
+                        echo "Branch auswählen (stable/beta/experimental): "
+                        read branch
+                        echo "Firmware wird im Branch $branch gebaut"
+                        case $branch in
+                                beta*|b*)
+                                        cd /home/gluon/gluon/
+                                        git pull
+                                        git checkout 2014.4.x
+                                        echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
+                                        read version
+                                        make update
+                                        make clean
+                                        make -j5 GLUON_BRANCH=beta GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-beta-$version
+                                        make manifest GLUON_BRANCH=beta
+                                        rm -rf /home/gluon/firmware/beta
+                                        cp -r /home/gluon/gluon/images /home/gluon/firmware/beta
+                                        chmod 775 -R /home/gluon/firmware;;
+                                stable*|s*) echo stable
+                                        cd /home/gluon/gluon/
+                                        git pull
+                                        git checkout 2014.4.x
+                                        echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
+                                        read version
+                                        make update
+                                        make clean
+                                        make -j5 GLUON_BRANCH=stable GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-stable-$version
+                                        make manifest GLUON_BRANCH=stable
+                                        rm -rf /home/gluon/firmware/stable
+                                        cp -r /home/gluon/gluon/images /home/gluon/firmware/stable
+                                        cp -r /home/gluon/gluon/images /home/gluon/firmware/latest
+                                        rename s/$version/latest/g /home/gluon/firmware/latest/factory/*
+                                        rename s/$version/latest/g /home/gluon/firmware/latest/sysupgrade/*
+                                        chmod 775 -R /home/gluon/firmware;;
+                                experimental*|e*) echo experimental
+                                        cd /home/gluon/gluon/
+                                        git pull
+                                        git checkout master
+                                        echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
+                                        read version
+                                        make update
+                                        make clean GLUON_TARGET=ar71xx-generic
+                                        make clean GLUON_TARGET=x86-generic
+                                        make clean GLUON_TARGET=x86-kvm_guest
+                                        make -j5 GLUON_BRANCH=experimental GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                        make -j5 GLUON_BRANCH=experimental GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                        make -j5 GLUON_BRANCH=experimental GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                        make manifest GLUON_BRANCH=experimental
+                                        rm -rf /home/gluon/firmware/experimental
+                                        cp -r /home/gluon/gluon/images /home/gluon/firmware/experimental
+                                        chmod 775 -R /home/gluon/firmware;;
+                        esac
+                        esac
+                echo -e "\nFirmware $version wurde gebaut und signiert.";;
+        hennef*|h*)
+        echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder [c]leaning:"
+        read buildorsign
+        case $buildorsign in
+                freigeben*|f*)
+                        if [ "$USER" != "gluon" ] 
+                                then echo "Keine Berechtigung. Der Benutzer $USER ist nicht Berechtigt die Firmware freizugeben!" 
+                                exit 1
+                                else echo "User Gluon erkannt!"
+                        fi
+                        echo "Firmware wird nun auf die Update Server verteilt"
+                        rsync -aP --delete  /home/gluon/firmware-hennef root@10.0.0.75:/var/www/images.freifunk-hennef.de;;
+
+                signieren*|s*)
+                        echo "Branch auswählen (stable/beta/experimental): "
+                        read branch
+                        case $branch in
+                                beta*|b*)
+                                        /home/gluon/gluon-hennef/contrib/sign.sh ~/firmwarekey /home/gluon/firmware-hennef/beta/sysupgrade/beta.manifest;;
+                                stable*|s*)
+                                        /home/gluon/gluon-hennef/contrib/sign.sh ~/firmwarekey /home/gluon/firmware-hennef/stable/sysupgrade/stable.manifest;;
+                                experimental*|e*)
+                                        /home/gluon/gluon-hennef/contrib/sign.sh ~/firmwarekey /home/gluon/firmware-hennef/experimental/sysupgrade/experimental.manifest;;
+                        esac
+                        echo -e "\n$branch Firmware wurde signiert.";;
+                clean*|c*)
+                        if [ "$USER" != "gluon" ] 
+                                then echo "Keine Berechtigung" 
+                                exit 1
+                                else echo "User Gluon erkannt!"
+                        fi
+                        cd /home/gluon/gluon/
+                        make dirclean
+                        echo "Cleanup Complete";; 
+                bauen*|b*)
+                        echo "Berechtigung wird geprüft"
+                        if [ "$USER" != "gluon" ] 
+                                then echo "Keine Berechtigung. Der Benutzer $USER ist nicht Berechtigt die Firmware zu bauen!" 
+                                exit 1
+                                else echo "User Gluon erkannt!"
+                        fi
+                        echo "Branch auswählen (stable/beta/experimental): "
+                        read branch
+                        echo "Firmware wird im Branch $branch gebaut"
+                        case $branch in
+                                beta*|b*)
+                                        cd /home/gluon/gluon-hennef/
+                                        git pull
+                                        git checkout 2014.4.x
+                                        echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
+                                        read version
+                                        make update
+                                        make clean
+                                        make -j5 GLUON_BRANCH=beta GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-beta-$version
+                                        make manifest GLUON_BRANCH=beta
+                                        rm -rf /home/gluon/firmware-hennef/beta
+                                        cp -r /home/gluon/gluon-hennef/images /home/gluon/firmware-hennef/beta
+                                        chmod 775 -R /home/gluon/firmware-hennef
+                                        make dirclean;;
+                                stable*|s*) echo stable
+                                        cd /home/gluon/gluon-hennef/
+                                        git pull
+                                        git checkout 2014.4.x
+                                        echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
+                                        read version
+                                        make update
+                                        make clean
+                                        make -j5 GLUON_BRANCH=stable GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-stable-$version
+                                        make manifest GLUON_BRANCH=stable
+                                        rm -rf /home/gluon/firmware-hennef/stable
+                                        cp -r /home/gluon/gluon-hennef/images /home/gluon/firmware-hennef/stable
+                                        cp -r /home/gluon/gluon-hennef/images /home/gluon/firmware-hennef/latest
+                                        rename s/$version/latest/g /home/gluon/firmware-hennef/latest/factory/*
+                                        rename s/$version/latest/g /home/gluon/firmware-hennef/latest/sysupgrade/*
+                                        chmod 775 -R /home/gluon/firmware-hennef
+                                        make dirclean;;
+                                experimental*|e*) echo experimental
+                                        cd /home/gluon/gluon-hennef/
+                                        git pull
+                                        git checkout master
+                                        echo "Neue Versionsnummer?(eg. 0.1, 0.5, 1)"
+                                        read version
+                                        make clean GLUON_TARGET=ar71xx-generic
+                                        make clean GLUON_TARGET=x86-generic
+                                        make clean GLUON_TARGET=x86-kvm_guest
+                                        make update
+                                        make -j5 V=s GLUON_BRANCH=experimental GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                        make -j5 GLUON_BRANCH=experimental GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                        make -j5 GLUON_BRANCH=experimental GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-experimental-$version
+                                        make manifest GLUON_BRANCH=experimental
+                                        rm -rf /home/gluon/firmware-hennef/experimental
+                                        cp -r /home/gluon/gluon-hennef/images /home/gluon/firmware-hennef/experimental
+                                        chmod 775 -R /home/gluon/firmware-hennef
+                                        make dirclean;;
+                        esac
+                echo -e "\nFirmware $version wurde gebaut und signiert.";;
+        esac
+        
+esac
