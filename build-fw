@@ -23,6 +23,9 @@ case $imput_community in
                 gluon_pfad=/home/gluon/gluon-hennef/
                 firmware_pfad_unsigned=/home/gluon/firmware-unsigned-hennef/
                 firmware_pfad_signed=/home/gluon/firmware-signed-hennef/;;
+        *)
+                echo "Keine gültige Auswahl für Community!"
+                exit 1;;
 esac
 case $imput_branch in
         stable*|s*)
