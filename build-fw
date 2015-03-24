@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Benutzerabfragen
 echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
