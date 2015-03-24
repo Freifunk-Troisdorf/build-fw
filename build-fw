@@ -7,10 +7,21 @@ echo -e "[T]roisdorf oder [H]ennef:"
 read input_community
 echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder [c]leaning:"
 read input_feature
-echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
-read input_branch
-echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
-read input_version
+
+# Wenn "cleaning" ausgewählt wurde, können Eingaben zu Branch und Version
+# ignoriert werden. Setze dazu diese Werte auf "save values". Bei allen
+# anderen Tasks/Features wird der User nach den Eingaben gefragt.
+if [ "$input_feature" == "c" ]
+then
+        input_branch="s"
+        input_version=""
+else
+        echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
+        read input_branch
+        echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
+        read input_version
+fi
+
 # Bedingungen setzen
 case $input_community in
         troisdorf*|t*)
@@ -27,6 +38,7 @@ case $input_community in
                 echo "Keine gültige Auswahl für Community!"
                 exit 1;;
 esac
+
 case $input_branch in
         stable*|s*)
                 gluon_version=2014.4.x
