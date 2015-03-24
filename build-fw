@@ -37,6 +37,9 @@ case $imput_branch in
         experimental*|e*)
                 gluon_version=master
                 branch=experimental;;
+        *)
+                echo "Keine gültige Auswahl für Branch!"
+                exit 1;;
 esac
 #Befehle ausführen
 case $imput_feature in
