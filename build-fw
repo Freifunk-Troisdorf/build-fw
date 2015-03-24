@@ -4,15 +4,15 @@
 echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
 echo -e "[T]roisdorf oder [H]ennef:"
-read imput_community
+read input_community
 echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder [c]leaning:"
-read imput_feature
+read input_feature
 echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
-read imput_branch
+read input_branch
 echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
-read imput_version
+read input_version
 # Bedingungen setzen
-case $imput_community in
+case $input_community in
         troisdorf*|t*)
                 community=troisdorf
                 gluon_pfad=/home/gluon/gluon/
@@ -27,7 +27,7 @@ case $imput_community in
                 echo "Keine gültige Auswahl für Community!"
                 exit 1;;
 esac
-case $imput_branch in
+case $input_branch in
         stable*|s*)
                 gluon_version=2014.4.x
                 branch=stable;;
@@ -42,7 +42,7 @@ case $imput_branch in
                 exit 1;;
 esac
 #Befehle ausführen
-case $imput_feature in
+case $input_feature in
         bauen*|b*)
                 echo "Berechtigung wird geprüft"
                 if [ "$USER" != "gluon" ] 
@@ -55,10 +55,10 @@ case $imput_feature in
                 git checkout $gluon_version
                 make dirclean
                 make update
-                make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$imput_version
+                make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
                 if [ branch = experimental ]; then
-                        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$imput_version
-                        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-$branch-$imput_version
+                        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
+                        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
                 fi
                 make manifest GLUON_BRANCH=$branch
                 rm -rf "$firmware_pfad_unsigned""$branch"
