@@ -1,0 +1,26 @@
+ToDo
+====
+
+Überprüfungen für verschiedene Tasks/Features
+---------------------------------------------
+
+Task "Firmware bauen"
+* Ordner $gluon_pfad existent und beschreibbar
+* Ordner $firmware_pfad_unsigned existent und beschreibbar (oder wird der autom. angelegt?)
+* Ordner $firmware_pfad_signed existent und beschreibbar (oder wird der autom. angelegt?)
+
+Task "Firmware signieren"
+* Key file ~/firmwarekey existiert und ist lesbar
+* Ordner $firmware_pfad_unsigned existent und lesbar
+* Ordner $firmware_pfad_signed existent und beschreibbar (oder wird der autom. angelegt?)
+
+Task "Firmware freigeben"
+* Ordner $firmware_pfad_signed existent und lesbar
+
+Task "Cleaning"
+  Ich weiß nicht ganz, was bei cleaning alles gemacht wird.
+  Werden auch die Firmware-Ordner gelöscht?
+* Ordner $gluon_pfad existent und beschreibbar
+* Ordner $firmware_pfad_unsigned existent und beschreibbar
+* Ordner $firmware_pfad_signed existent und beschreibbar
+
