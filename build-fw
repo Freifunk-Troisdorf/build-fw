@@ -13,95 +13,120 @@ read input_feature
 # anderen Tasks/Features wird der User nach den Eingaben gefragt.
 if [ "$input_feature" == "c" ]
 then
-        input_branch="s"
-        input_version=""
+    input_branch="s"
+    input_version=""
 else
-        echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
-        read input_branch
-        echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
-        read input_version
+    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
+    read input_branch
+    echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
+    read input_version
 fi
 
 # Bedingungen setzen
 case $input_community in
-        troisdorf*|t*)
-                community=troisdorf
-                gluon_pfad=/home/gluon/gluon/
-                firmware_pfad_unsigned=/home/gluon/firmware-unsigned-troisdorf/
-                firmware_pfad_signed=/home/gluon/firmware-signed-troisdorf/;;
-        hennef*|h*)
-                community=hennef
-                gluon_pfad=/home/gluon/gluon-hennef/
-                firmware_pfad_unsigned=/home/gluon/firmware-unsigned-hennef/
-                firmware_pfad_signed=/home/gluon/firmware-signed-hennef/;;
-        *)
-                echo "Keine gültige Auswahl für Community!"
-                exit 1;;
+    troisdorf*|t*)
+        community=troisdorf
+        gluon_pfad=/home/gluon/gluon/
+        firmware_pfad_unsigned=/home/gluon/firmware-unsigned-troisdorf/
+        firmware_pfad_signed=/home/gluon/firmware-signed-troisdorf/;;
+    hennef*|h*)
+        community=hennef
+        gluon_pfad=/home/gluon/gluon-hennef/
+        firmware_pfad_unsigned=/home/gluon/firmware-unsigned-hennef/
+        firmware_pfad_signed=/home/gluon/firmware-signed-hennef/;;
+    *)
+        echo "Keine gültige Auswahl für Community!"
+        exit 1;;
 esac
 
 case $input_branch in
-        stable*|s*)
-                gluon_version=2014.4.x
-                branch=stable;;
-        beta*|b*)
-                gluon_version=2014.4.x
-                branch=beta;;
-        experimental*|e*)
-                gluon_version=master
-                branch=experimental;;
-        *)
-                echo "Keine gültige Auswahl für Branch!"
-                exit 1;;
+    stable*|s*)
+        gluon_version=2014.4.x
+        branch=stable;;
+    beta*|b*)
+        gluon_version=2014.4.x
+        branch=beta;;
+    experimental*|e*)
+        gluon_version=master
+        branch=experimental;;
+    *)
+        echo "Keine gültige Auswahl für Branch!"
+        exit 1;;
 esac
-#Befehle ausführen
+
+# Task/Feature ausführen
 case $input_feature in
-        bauen*|b*)
-                echo "Berechtigung wird geprüft"
-                if [ "$USER" != "gluon" ] 
-                        then echo "Keine Berechtigung. Der Benutzer $USER ist nicht Berechtigt die Firmware zu bauen!" 
-                        exit 1
-                        else echo "User Gluon erkannt!"
-                fi
-                cd $gluon_pfad
-                git pull
-                git checkout $gluon_version
-                make dirclean
-                make update
-                make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
-                if [ branch = experimental ]; then
-                        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
-                        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
-                fi
-                make manifest GLUON_BRANCH=$branch
-                rm -rf "$firmware_pfad_unsigned""$branch"
-                cp -r "$gluon_pfad"images "$firmware_pfad_unsigned""$branch"
-                rm -rf "$gluon_pfad"images
-                chmod 775 -R $firmware_pfad_unsigned;;
-        signieren*|s*)
-                "$gluon_pfad"contrib/sign.sh ~/firmwarekey "$firmware_pfad_unsigned""$branch"/sysupgrade/"$branch".manifest;;
-        freigeben*|f*)
-                if [ "$USER" != "gluon" ] 
-                        then echo "Keine Berechtigung. Der Benutzer $USER ist nicht Berechtigt die Firmware freizugeben!" 
-                        exit 1
-                        else echo "User Gluon erkannt!"
-                fi
-                rm -rf "$firmware_pfad_signed"/"$branch"
-                mv "$firmware_pfad_unsigned"/"$branch" "$firmware_pfad_signed"/"$branch"
-                if [ $community = troisdorf ]
-                        then 
-                                rsync -aP --delete  /home/gluon/firmware-signed-troisdorf/ root@10.0.0.75:/var/www/images.freifunk-troisdorf.de
-                                rsync -aP --delete --exclude=/latest  /home/gluon/firmware-signed-troisdorf/ fwupload@update2.infra.fftdf:~/www
-                elif [ $community = hennef ]
-                        then
-                                rsync -aP --delete  /home/gluon/firmware-signed-hennef/ root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
-                fi;;
-        cleaning*|c*)
-                if [ "$USER" != "gluon" ] 
-                        then echo "Keine Berechtigung" 
-                        exit 1
-                        else echo "User Gluon erkannt!"
-                fi
-                cd $gluon_pfad
-                make dirclean;;                
+
+    #### Firmware bauen ####
+    bauen*|b*)
+        echo "Berechtigung wird geprüft"
+        if [ "$USER" != "gluon" ]; then
+            echo "Der Benutzer $USER ist nicht berechtigt, die Firmware zu bauen!" 
+            exit 1
+        else
+            echo "User Gluon erkannt!"
+        fi
+        cd $gluon_pfad
+        git pull
+        git checkout $gluon_version
+        make dirclean
+        make update
+        make GLUON_BRANCH=$branch \
+            GLUON_TARGET=ar71xx-generic \
+            DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
+        if [ branch = experimental ]; then
+            make -j5 GLUON_BRANCH=$branch \
+                GLUON_TARGET=x86-generic \
+                DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
+            make -j5 GLUON_BRANCH=$branch \
+                GLUON_TARGET=x86-kvm_guest \
+                DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
+        fi
+        make manifest GLUON_BRANCH=$branch
+        rm -rf "$firmware_pfad_unsigned""$branch"
+        cp -r "$gluon_pfad"images "$firmware_pfad_unsigned""$branch"
+        rm -rf "$gluon_pfad"images
+        chmod 775 -R $firmware_pfad_unsigned;;
+    
+    #### Firmware signieren ####
+    signieren*|s*)
+        "$gluon_pfad"contrib/sign.sh ~/firmwarekey \
+            "$firmware_pfad_unsigned""$branch"/sysupgrade/"$branch".manifest;;
+
+    #### Firmware freigeben ####
+    freigeben*|f*)
+        if [ "$USER" != "gluon" ]; then
+            echo "Der Benutzer $USER ist nicht berechtigt, die Firmware freizugeben!" 
+            exit 1
+        else
+            echo "User Gluon erkannt!"
+        fi
+        rm -rf "$firmware_pfad_signed"/"$branch"
+        mv "$firmware_pfad_unsigned"/"$branch" "$firmware_pfad_signed"/"$branch"
+        if [ $community = troisdorf ]; then
+            rsync -aP --delete \
+                $firmware_pfad_signed \
+                root@10.0.0.75:/var/www/images.freifunk-troisdorf.de
+            rsync -aP --delete --exclude=/latest \
+                $firmware_pfad_signed \
+                fwupload@update2.infra.fftdf:~/www
+        elif [ $community = hennef ]; then
+            rsync -aP --delete  \
+                $firmware_pfad_signed \
+                root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
+        fi;;
+
+    #### Aufräumen ####
+    cleaning*|c*)
+        if [ "$USER" != "gluon" ]; then
+            echo "Keine Berechtigung" 
+            exit 1
+        else
+            echo "User Gluon erkannt!"
+        fi
+        cd $gluon_pfad
+        make dirclean;;                
 esac
+
 echo -e "Alle Befehle ausgeführt!"
+
