@@ -94,16 +94,10 @@ case $input_feature in
         git checkout $gluon_version
         make dirclean
         make update
-        make GLUON_BRANCH=$branch \
-            GLUON_TARGET=ar71xx-generic \
-            DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
+        make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
         if [ branch = experimental ]; then
-            make -j5 GLUON_BRANCH=$branch \
-                GLUON_TARGET=x86-generic \
-                DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
-            make -j5 GLUON_BRANCH=$branch \
-                GLUON_TARGET=x86-kvm_guest \
-                DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
+            make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
+            make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
         fi
         make manifest GLUON_BRANCH=$branch
         rm -rf "$firmware_pfad_unsigned""$branch"
@@ -113,8 +107,7 @@ case $input_feature in
     
     #### Firmware signieren ####
     signieren*|s*)
-        "$gluon_pfad"contrib/sign.sh ~/firmwarekey \
-            "$firmware_pfad_unsigned""$branch"/sysupgrade/"$branch".manifest;;
+        "$gluon_pfad"contrib/sign.sh ~/firmwarekey "$firmware_pfad_unsigned""$branch"/sysupgrade/"$branch".manifest;;
 
     #### Firmware freigeben ####
     freigeben*|f*)
@@ -127,16 +120,10 @@ case $input_feature in
         rm -rf "$firmware_pfad_signed"/"$branch"
         mv "$firmware_pfad_unsigned"/"$branch" "$firmware_pfad_signed"/"$branch"
         if [ $community = troisdorf ]; then
-            rsync $rsync_opt \
-                $firmware_pfad_signed \
-                root@10.0.0.75:/var/www/images.freifunk-troisdorf.de
-            rsync $rsync_opt --exclude=/latest \
-                $firmware_pfad_signed \
-                fwupload@update2.infra.fftdf:~/www
+            rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-troisdorf.de/firmware
+            rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
         elif [ $community = hennef ]; then
-            rsync $rsync_opt  \
-                $firmware_pfad_signed \
-                root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
+            rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
         fi;;
 
     #### Aufräumen ####
