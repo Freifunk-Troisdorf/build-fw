@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# Beende das Skript, sobald ein Fehler bei einem Kommando auftritt
+set -e
+set -o pipefail
 
 # Benutzerabfragen
 echo -e "Freifunk Firmware Tool\n"
