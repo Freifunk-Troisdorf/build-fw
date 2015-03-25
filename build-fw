@@ -4,6 +4,13 @@
 set -e
 set -o pipefail
 
+# Überprüfe, ob alle notwendigen Tools zur Verfügung stehen
+for tool in git make rsync
+do
+    command -v $tool >/dev/null 2>&1 \
+        || { echo >&2 "\"$tool\" nicht installiert. Abbruch"; exit 1; }
+done
+
 # Benutzerabfragen
 echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
