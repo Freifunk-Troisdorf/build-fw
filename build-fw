@@ -90,8 +90,8 @@ case $input_feature in
             echo "User Gluon erkannt!"
         fi
         cd $gluon_pfad
-        git pull
         git checkout $gluon_version
+        git pull
         make dirclean
         make update
         make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
