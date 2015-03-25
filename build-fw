@@ -15,8 +15,7 @@ read input_feature
 # Wenn "cleaning" ausgewählt wurde, können Eingaben zu Branch und Version
 # ignoriert werden. Setze dazu diese Werte auf "save values". Bei allen
 # anderen Tasks/Features wird der User nach den Eingaben gefragt.
-if [ "$input_feature" == "c" ]
-then
+if [ "$input_feature" == "c" ]; then
     input_branch="s"
     input_version=""
 else
@@ -24,6 +23,19 @@ else
     read input_branch
     echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
     read input_version
+fi
+
+# Wenn "freigeben" ausgewählt wurde, den User fragen, ob rsync mit der
+# Option --dry-run ausgeführt werden soll. Das kann für Tests sinnvoll
+# sein, wenn ein Kopieren der Firmware-Dateien nicht tatsächlich
+# erfolgen soll.
+rsync_opt="-aP --delete" # default rsync options
+if [ "$input_feature" == "f" ]; then
+    echo -e "Rsync mit Option --dry-run zu Testzwecken ausführen [j/n]?"
+    read input_dryrun
+    if [ "$input_dryrun" == "j" ]; then
+        rsync_opt="$rsync_opt --dry-run"
+    fi
 fi
 
 # Bedingungen setzen
@@ -108,14 +120,14 @@ case $input_feature in
         rm -rf "$firmware_pfad_signed"/"$branch"
         mv "$firmware_pfad_unsigned"/"$branch" "$firmware_pfad_signed"/"$branch"
         if [ $community = troisdorf ]; then
-            rsync -aP --delete \
+            rsync $rsync_opt \
                 $firmware_pfad_signed \
                 root@10.0.0.75:/var/www/images.freifunk-troisdorf.de
-            rsync -aP --delete --exclude=/latest \
+            rsync $rsync_opt --exclude=/latest \
                 $firmware_pfad_signed \
                 fwupload@update2.infra.fftdf:~/www
         elif [ $community = hennef ]; then
-            rsync -aP --delete  \
+            rsync $rsync_opt  \
                 $firmware_pfad_signed \
                 root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
         fi;;
