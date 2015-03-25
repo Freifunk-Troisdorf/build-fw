@@ -49,7 +49,7 @@ fi
 case $input_community in
     troisdorf*|t*)
         community=troisdorf
-        gluon_pfad=/home/gluon/gluon/
+        gluon_pfad=/home/gluon/gluon-troisdorf/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-troisdorf/
         firmware_pfad_signed=/home/gluon/firmware-signed-troisdorf/;;
     hennef*|h*)
