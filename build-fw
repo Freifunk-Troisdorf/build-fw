@@ -94,7 +94,7 @@ case $input_feature in
         git pull
         make dirclean
         make update
-        make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=2014.4-$branch-$input_version
+        make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
         if [ $branch = experimental ]; then
             make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
             make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
@@ -124,7 +124,8 @@ case $input_feature in
             rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
         elif [ $community = hennef ]; then
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
-        fi;;
+        fi
+        ;;
 
     #### Aufräumen ####
     cleaning*|c*)
