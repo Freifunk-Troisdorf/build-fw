@@ -139,7 +139,7 @@ case $input_feature in
                 git push origin --tags;;
             n*)
                 echo -e "Es wurden keine Tags erstellt!";;
-        esac
+        esac;;
     
     #### Firmware signieren ####
     signieren*|s*)
