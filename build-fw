@@ -89,6 +89,22 @@ case $input_feature in
         else
             echo "User Gluon erkannt!"
         fi
+        echo -e "Gluon und Site Configuration Updaten? [j/n]"
+        read update
+        case $update in
+            j*)
+                echo -e "Repositorys werden Aktualisiert"
+                cd $gluon_pfad
+                git checkout master
+                git fetch upstream
+                git rebase upstream/master
+                git push
+                cd "$gluon_pfad""site"
+                git checkout master
+                git pull;;
+            n*)
+                echo -e "Es werden keine Updates eingespielt!";;
+        esac
         cd $gluon_pfad
         git checkout $gluon_version
         git pull
@@ -103,7 +119,27 @@ case $input_feature in
         rm -rf "$firmware_pfad_unsigned""$branch"
         cp -r "$gluon_pfad"images "$firmware_pfad_unsigned""$branch"
         rm -rf "$gluon_pfad"images
-        chmod 775 -R $firmware_pfad_unsigned;;
+        chmod 775 -R $firmware_pfad_unsigned
+        echo -e "Aktuelle Firmware in github taggen? [j/n]"
+        read tag
+        case $tag in
+            j*)
+                echo -e "Tag $branch-$input_version wird erstellt."
+                #Tagging Gluon
+                cd $gluon_pfad
+                git tag $branch-$input_version
+                git push origin --tags
+                #Tagging Site
+                cd "$gluon_pfad"site
+                git tag $branch-$input_version
+                git push origin --tags
+                #Tagging Build-Script
+                cd /home/gluon
+                git tag $branch-$input_version
+                git push origin --tags;;
+            n*)
+                echo -e "Es wurden keine Tags erstellt!";;
+        esac
     
     #### Firmware signieren ####
     signieren*|s*)
