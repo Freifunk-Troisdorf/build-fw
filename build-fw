@@ -94,13 +94,11 @@ case $input_feature in
         case $update in
             j*)
                 echo -e "Repositorys werden Aktualisiert"
+                #Update Gluon
                 cd $gluon_pfad
-                git checkout master
-                git fetch upstream
-                git rebase upstream/master
-                git push
+                git pull
+                #Update Site.conf
                 cd "$gluon_pfad""site"
-                git checkout master
                 git pull;;
             n*)
                 echo -e "Es werden keine Updates eingespielt!";;
@@ -108,14 +106,17 @@ case $input_feature in
         cd $gluon_pfad
         git checkout $gluon_version
         git pull
-        make dirclean
+        #Firmware Bauen
         make update
-        make GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
         if [ $branch = experimental ]; then
+            make dirclean
             make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
             make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
+            make dirclean
         fi
         make manifest GLUON_BRANCH=$branch
+        #Firmware Images Kopieren
         rm -rf "$firmware_pfad_unsigned""$branch"
         cp -r "$gluon_pfad"images "$firmware_pfad_unsigned""$branch"
         rm -rf "$gluon_pfad"images
@@ -139,7 +140,8 @@ case $input_feature in
                 git push origin --tags;;
             n*)
                 echo -e "Es wurden keine Tags erstellt!";;
-        esac;;
+        esac
+        ;;
     
     #### Firmware signieren ####
     signieren*|s*)
@@ -153,11 +155,11 @@ case $input_feature in
         else
             echo "User Gluon erkannt!"
         fi
-        rm -rf "$firmware_pfad_signed"/"$branch"
-        mv "$firmware_pfad_unsigned"/"$branch" "$firmware_pfad_signed"/"$branch"
+        rm -rf "$firmware_pfad_signed""$branch"
+        mv "$firmware_pfad_unsigned""$branch" "$firmware_pfad_signed""$branch"
         if [ $community = troisdorf ]; then
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-troisdorf.de/firmware
-            rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
+            rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www/firmware
         elif [ $community = hennef ]; then
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
         fi
