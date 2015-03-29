@@ -65,12 +65,15 @@ esac
 case $input_branch in
     stable*|s*)
         gluon_version=2014.4.x
+        gluon_version_name=2014.4
         branch=stable;;
     beta*|b*)
         gluon_version=2014.4.x
+        gluon_version_name=2014.4
         branch=beta;;
     experimental*|e*)
         gluon_version=master
+        gluon_version_name=master
         branch=experimental;;
     *)
         echo "Keine gültige Auswahl für Branch!"
@@ -108,11 +111,11 @@ case $input_feature in
         git pull
         #Firmware Bauen
         make update
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
         if [ $branch = experimental ]; then
             make dirclean
-            make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
-            make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version-$branch-$input_version
+            make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
+            make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
             make dirclean
         fi
         make manifest GLUON_BRANCH=$branch
@@ -178,4 +181,3 @@ case $input_feature in
 esac
 
 echo -e "Alle Befehle ausgeführt!"
-
