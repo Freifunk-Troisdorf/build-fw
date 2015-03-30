@@ -22,10 +22,13 @@ read input_feature
 # Wenn "cleaning" ausgewählt wurde, können Eingaben zu Branch und Version
 # ignoriert werden. Setze dazu diese Werte auf "save values". Bei allen
 # anderen Tasks/Features wird der User nach den Eingaben gefragt.
-if [ "$input_feature" == "c" ]; then
-    input_branch="s"
-    input_version=""
-else
+if [ "$input_feature" == "s" ]; then
+    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
+    read input_branch
+elif [ "input_feature" == "f" ]; then
+    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
+    read input_branch
+elif [ "input_feature" == "b" ]; then
     echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
     read input_branch
     echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
@@ -142,13 +145,15 @@ case $input_feature in
                 git tag $branch-$input_version
                 git push origin --tags;;
             n*)
-                echo -e "Es wurden keine Tags erstellt!";;
+                echo -e "Es wurden keine Tags erstellt!"
+                echo -e "Firmware im Branch: $branch wurde in Version $input_version gebaut.";;
         esac
         ;;
     
     #### Firmware signieren ####
     signieren*|s*)
-        "$gluon_pfad"contrib/sign.sh ~/firmwarekey "$firmware_pfad_unsigned""$branch"/sysupgrade/"$branch".manifest;;
+        "$gluon_pfad"contrib/sign.sh ~/firmwarekey "$firmware_pfad_unsigned""$branch"/sysupgrade/"$branch".manifest
+        echo -e "Die Firmware aus dem Branch $branch wurde erfolgreich signiert!";;
 
     #### Firmware freigeben ####
     freigeben*|f*)
