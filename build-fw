@@ -102,16 +102,16 @@ case $input_feature in
                 echo -e "Repositorys werden Aktualisiert"
                 #Update Gluon
                 cd $gluon_pfad
+                git checkout $gluon_version
                 git pull
                 #Update Site.conf
                 cd "$gluon_pfad""site"
+                git checkout $gluon_version
                 git pull;;
             n*)
                 echo -e "Es werden keine Updates eingespielt!";;
         esac
         cd $gluon_pfad
-        git checkout $gluon_version
-        git pull
         #Firmware Bauen
         make update
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
