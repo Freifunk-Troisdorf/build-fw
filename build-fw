@@ -103,11 +103,11 @@ case $input_feature in
                 #Update Gluon
                 cd $gluon_pfad
                 git checkout $gluon_version
-                git pull
+                git pull origin $gluon_version
                 #Update Site.conf
                 cd "$gluon_pfad""site"
                 git checkout $gluon_version
-                git pull;;
+                git pull origin $gluon_version;;
             n*)
                 echo -e "Es werden keine Updates eingespielt!";;
         esac
