@@ -25,10 +25,12 @@ read input_feature
 if [ "$input_feature" == "s" ]; then
     echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
     read input_branch
-elif [ "input_feature" == "f" ]; then
+fi
+if [ "$input_feature" == "f" ]; then
     echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
     read input_branch
-elif [ "input_feature" == "b" ]; then
+fi
+if [ "$input_feature" == "b" ]; then
     echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
     read input_branch
     echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
@@ -112,14 +114,13 @@ case $input_feature in
                 echo -e "Es werden keine Updates eingespielt!";;
         esac
         cd $gluon_pfad
+        make dirclean
         #Firmware Bauen
         make update
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
         if [ $branch = experimental ]; then
-            make dirclean
             make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
             make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
-            make dirclean
         fi
         make manifest GLUON_BRANCH=$branch
         #Firmware Images Kopieren
