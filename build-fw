@@ -167,10 +167,10 @@ case $input_feature in
         rm -rf "$firmware_pfad_signed""$branch"
         mv "$firmware_pfad_unsigned""$branch" "$firmware_pfad_signed""$branch"
         if [ $community = troisdorf ]; then
-            rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-troisdorf.de/firmware
+            rsync $rsync_opt $firmware_pfad_signed root@5.9.174.75:/var/www/images.freifunk-troisdorf.de/firmware
             rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www/firmware
         elif [ $community = hennef ]; then
-            rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
+            rsync $rsync_opt $firmware_pfad_signed root@5.9.174.75:/var/www/images.freifunk-hennef.de/firmware
         fi
         ;;
 
