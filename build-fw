@@ -78,7 +78,7 @@ case $input_branch in
         branch=beta;;
     experimental*|e*)
         gluon_version=master
-        gluon_version_name=master
+        gluon_version_name=2015.0
         branch=experimental;;
     *)
         echo "Keine gültige Auswahl für Branch!"
