@@ -14,7 +14,7 @@ done
 # Benutzerabfragen
 echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
-echo -e "[T]roisdorf oder [H]ennef:"
+echo -e "[t]roisdorf oder [h]ennef:"
 read input_community
 echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder [c]leaning:"
 read input_feature
