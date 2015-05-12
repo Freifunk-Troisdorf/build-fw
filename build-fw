@@ -14,7 +14,7 @@ done
 # Benutzerabfragen
 echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
-echo -e "[T]roisdorf oder [H]ennef:"
+echo -e "[t]roisdorf oder [h]ennef:"
 read input_community
 echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder [c]leaning:"
 read input_feature
@@ -169,7 +169,7 @@ case $input_feature in
         cp -R "$firmware_pfad_unsigned""$branch" "$firmware_pfad_signed""$branch"
         if [ $community = troisdorf ]; then
             rsync $rsync_opt $firmware_pfad_signed root@5.9.174.75:/var/www/images.freifunk-troisdorf.de/firmware
-            rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www/firmware
+            rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
         elif [ $community = hennef ]; then
             rsync $rsync_opt $firmware_pfad_signed root@5.9.174.75:/var/www/images.freifunk-hennef.de/firmware
         fi
