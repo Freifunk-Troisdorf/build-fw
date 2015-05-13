@@ -16,7 +16,7 @@ echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
 echo -e "[t]roisdorf oder [h]ennef:"
 read input_community
-echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder [c]leaning:"
+echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder s[y]nc:"
 read input_feature
 
 # Wenn "cleaning" ausgewählt wurde, können Eingaben zu Branch und Version
@@ -176,16 +176,20 @@ case $input_feature in
         rm -R "$firmware_pfad_unsigned""$branch"
         ;;
 
-    #### Aufräumen ####
-    cleaning*|c*)
+    #### Syncronisieren ####
+    sync*|y*)
         if [ "$USER" != "gluon" ]; then
             echo "Keine Berechtigung" 
             exit 1
         else
             echo "User Gluon erkannt!"
         fi
-        cd $gluon_pfad
-        make dirclean;;                
+        if [ $community = troisdorf ]; then
+            rsync $rsync_opt $firmware_pfad_signed root@5.9.174.75:/var/www/images.freifunk-troisdorf.de/firmware
+            rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
+        elif [ $community = hennef ]; then
+            rsync $rsync_opt $firmware_pfad_signed root@5.9.174.75:/var/www/images.freifunk-hennef.de/firmware
+        fi;;                
 esac
 
 echo -e "Alle Befehle ausgeführt!"
