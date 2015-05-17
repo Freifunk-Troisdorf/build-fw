@@ -72,8 +72,8 @@ esac
 
 case $input_branch in
     stable*|s*)
-        gluon_version=2014.4.x
-        gluon_version_name=2014.4.x
+        gluon_version=v2015.1
+        gluon_version_name=2015.1
         branch=stable;;
     beta*|b*)
         gluon_version=v2015.1
