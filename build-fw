@@ -36,6 +36,9 @@ if [ "$input_feature" == "b" ]; then
     echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
     read input_version
 fi
+if [ "$input_feature" == "y" ]; then
+    input_branch=s
+fi
 
 # Wenn "freigeben" ausgewählt wurde, den User fragen, ob rsync mit der
 # Option --dry-run ausgeführt werden soll. Das kann für Tests sinnvoll
@@ -118,10 +121,10 @@ case $input_feature in
         #Firmware Bauen
         make update
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
-        if [ $branch = experimental ]; then
-            make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
-            make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
-        fi
+#        if [ $branch = experimental ]; then
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
+#        fi
         make manifest GLUON_BRANCH=$branch
         #Firmware Images Kopieren
         rm -rf "$firmware_pfad_unsigned""$branch"
@@ -135,15 +138,15 @@ case $input_feature in
                 echo -e "Tag $branch-$input_version wird erstellt."
                 #Tagging Gluon
                 cd $gluon_pfad
-                git tag $branch-$input_version
+                git tag $gluon_version_name-$branch-$input_version
                 git push origin --tags
                 #Tagging Site
                 cd "$gluon_pfad"site
-                git tag $branch-$input_version
+                git tag $gluon_version_name-$branch-$input_version
                 git push origin --tags
                 #Tagging Build-Script
                 cd /home/gluon
-                git tag $branch-$input_version
+                git tag $gluon_version_name-$branch-$input_version
                 git push origin --tags;;
             n*)
                 echo -e "Es wurden keine Tags erstellt!"
