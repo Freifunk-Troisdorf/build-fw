@@ -82,7 +82,7 @@ case $input_branch in
         gluon_version_name=2015.1
         branch=beta;;
     experimental*|e*)
-        gluon_version=master
+        gluon_version=v2015.1
         site_version=v2015.1
         gluon_version_name=2015.1.x
         branch=experimental;;
