@@ -31,7 +31,7 @@ if [ "$input_feature" == "f" ]; then
     read input_branch
 fi
 if [ "$input_feature" == "b" ]; then
-    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
+    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental, [m]anaged"
     read input_branch
     echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
     read input_version
@@ -86,6 +86,11 @@ case $input_branch in
         site_version=v2015.1
         gluon_version_name=2015.1.x
         branch=experimental;;
+    managed*|m*)
+        gluon_version=v2015.1
+        site_version=managed_node
+        gluon_version_name=2015.1
+        branch=stable;;
     *)
         echo "Keine gültige Auswahl für Branch!"
         exit 1;;
