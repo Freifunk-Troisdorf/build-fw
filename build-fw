@@ -199,7 +199,7 @@ case $input_feature in
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-troisdorf.de/firmware
             rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
         elif [ $community = hennef ]; then
-            rsync $rsync_opt $firmware_pfad_signed root@5.9.174.75:/var/www/images.freifunk-hennef.de/firmware
+            rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
         fi;;                
 esac
 
