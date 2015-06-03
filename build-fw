@@ -88,7 +88,7 @@ case $input_branch in
         branch=experimental;;
     managed*|m*)
         gluon_version=v2015.1
-        site_version=managed_node
+        site_version=managed_nodes
         gluon_version_name=2015.1
         branch=stable;;
     *)
