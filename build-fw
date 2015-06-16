@@ -59,11 +59,13 @@ case $input_community in
         community=troisdorf
         gluon_pfad=/home/gluon/gluon-troisdorf/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-troisdorf/
-        firmware_pfad_signed=/home/gluon/firmware-signed-troisdorf/;;
+        firmware_pfad_signed=/home/gluon/firmware-signed-troisdorf/
+        site_code=tdf;;
     hennef*|h*)
         community=hennef
         gluon_pfad=/home/gluon/gluon-hennef/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-hennef/
+        site_code=Hennef
         firmware_pfad_signed=/home/gluon/firmware-signed-hennef/;;
     *)
         echo "Keine gültige Auswahl für Community!"
@@ -128,7 +130,7 @@ case $input_feature in
 #        make dirclean
         #Firmware Bauen
         make update
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
+        make -j5 V=s GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
 #        if [ $branch = experimental ]; then
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
@@ -178,6 +180,10 @@ case $input_feature in
 
         rm -rf "$firmware_pfad_signed""$branch"
         cp -R "$firmware_pfad_unsigned""$branch" "$firmware_pfad_signed""$branch"
+    ####x86 Images in Zip Archiv packen ####
+        cd "$firmware_pfad_signed""$branch"/factory/
+        zip gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-images gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-*
+        rm gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-*
         if [ $community = troisdorf ]; then
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-troisdorf.de/firmware
             rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
