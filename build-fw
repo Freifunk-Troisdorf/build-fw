@@ -182,7 +182,7 @@ case $input_feature in
         cp -R "$firmware_pfad_unsigned""$branch" "$firmware_pfad_signed""$branch"
     ####x86 Images in Zip Archiv packen ####
         cd "$firmware_pfad_signed""$branch"/factory/
-        zip gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-images gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-*
+        zip gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-images gluon-$site_code-$gluon_version_name-$branch-"$input_version"x86-*
         rm gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-*
         if [ $community = troisdorf ]; then
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-troisdorf.de/firmware
