@@ -14,7 +14,7 @@ done
 # Benutzerabfragen
 echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
-echo -e "[t]roisdorf oder [h]ennef:"
+echo -e "[t]roisdorf, [h]ennef, [s]ankt Augustin, [l]ohmar, [n]iederkassel, [si]egburg:"
 read input_community
 echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder s[y]nc:"
 read input_feature
@@ -69,6 +69,30 @@ case $input_community in
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-hennef/
         site_code=Hennef
         firmware_pfad_signed=/home/gluon/firmware-signed-hennef/;;
+    lohmar*|l*)
+        community=lohmar
+        gluon_pfad=/home/gluon/gluon-lohmar/
+        firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/lohmar/
+        site_code=Lohmar
+        firmware_pfad_signed=/home/gluon/firmware-signed-rsk/lohmar/;;
+    sanktaugustin*|s*)
+        community=sanktaugustin
+        gluon_pfad=/home/gluon/gluon-sanktaugustin/
+        firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/sanktaugustin/
+        site_code=sanktaugustin
+        firmware_pfad_signed=/home/gluon/firmware-signed-rsk/sanktaugustin/;;
+    niederkassel*|n*)
+        community=niederkassel
+        gluon_pfad=/home/gluon/gluon-niederkassel/
+        firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/niederkassel/
+        site_code=niederkassel
+        firmware_pfad_signed=/home/gluon/firmware-signed-rsk/niederkassel/;;
+    siegburg*|si*)
+        community=siegburg
+        gluon_pfad=/home/gluon/gluon-siegburg/
+        firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/siegburg/
+        site_code=siegburg
+        firmware_pfad_signed=/home/gluon/firmware-signed-rsk/siegburg/;;
     *)
         echo "Keine gültige Auswahl für Community!"
         exit 1;;
@@ -208,6 +232,8 @@ case $input_feature in
             rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
         elif [ $community = hennef ]; then
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
+        elif [ $community = siegburg || lohmar || sanktaugustin || niederkassel ]; then
+            rsync $rsync_opt /home/gluon/firmware-signed-rsk/ root@10.0.0.75:/var/www/images.rsk/firmware
         fi;;                
 esac
 
