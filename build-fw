@@ -71,25 +71,25 @@ case $input_community in
         firmware_pfad_signed=/home/gluon/firmware-signed-hennef/;;
     lohmar*|l*)
         community=lohmar
-        gluon_pfad=/home/gluon/gluon-lohmar/
+        gluon_pfad=/home/gluon/gluon-rsk/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/lohmar/
         site_code=Lohmar
         firmware_pfad_signed=/home/gluon/firmware-signed-rsk/lohmar/;;
     sanktaugustin*|s*)
         community=sanktaugustin
-        gluon_pfad=/home/gluon/gluon-sanktaugustin/
+        gluon_pfad=/home/gluon/gluon-rsk/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/sanktaugustin/
         site_code=sanktaugustin
         firmware_pfad_signed=/home/gluon/firmware-signed-rsk/sanktaugustin/;;
     niederkassel*|n*)
         community=niederkassel
-        gluon_pfad=/home/gluon/gluon-niederkassel/
+        gluon_pfad=/home/gluon/gluon-rsk/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/niederkassel/
         site_code=niederkassel
         firmware_pfad_signed=/home/gluon/firmware-signed-rsk/niederkassel/;;
     siegburg*|si*)
         community=siegburg
-        gluon_pfad=/home/gluon/gluon-siegburg/
+        gluon_pfad=/home/gluon/gluon-rsk/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/siegburg/
         site_code=siegburg
         firmware_pfad_signed=/home/gluon/firmware-signed-rsk/siegburg/;;
@@ -146,7 +146,7 @@ case $input_feature in
                 git checkout $gluon_version
                 git pull origin $gluon_version
                 #Update Site.conf
-                cd "$gluon_pfad""site"
+                cd "$gluon_pfad""site-$community"
                 git checkout $site_version
                 git pull origin $site_version;;
             n*)
@@ -156,10 +156,10 @@ case $input_feature in
 #        make dirclean
         #Firmware Bauen
         make update
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version GLUON_SITEDIR=site-$community/
 #        if [ $branch = experimental ]; then
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version GLUON_SITEDIR=site-$community/
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version GLUON_SITEDIR=site-$community/
 #        fi
         make manifest GLUON_BRANCH=$branch
         #Firmware Images Kopieren
