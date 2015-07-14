@@ -221,6 +221,8 @@ case $input_feature in
             rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
         elif [ $community = hennef ]; then
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-hennef.de/firmware
+        elif [[ $community = siegburg || lohmar || niederkassel || sanktaugustin ]]; then
+        	rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-rhein-sieg.de/firmware
         fi
         rm -R "$firmware_pfad_unsigned""$branch"
         ;;
