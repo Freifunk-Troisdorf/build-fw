@@ -73,25 +73,25 @@ case $input_community in
         community=lohmar
         gluon_pfad=/home/gluon/gluon-rsk/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/lohmar/
-        site_code=Lohmar
+        site_code=lo
         firmware_pfad_signed=/home/gluon/firmware-signed-rsk/lohmar/;;
     sanktaugustin*|s*)
         community=sanktaugustin
         gluon_pfad=/home/gluon/gluon-rsk/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/sanktaugustin/
-        site_code=sanktaugustin
+        site_code=sa
         firmware_pfad_signed=/home/gluon/firmware-signed-rsk/sanktaugustin/;;
     niederkassel*|n*)
         community=niederkassel
         gluon_pfad=/home/gluon/gluon-rsk/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/niederkassel/
-        site_code=niederkassel
+        site_code=ndk
         firmware_pfad_signed=/home/gluon/firmware-signed-rsk/niederkassel/;;
     siegburg*|si*)
         community=siegburg
         gluon_pfad=/home/gluon/gluon-rsk/
         firmware_pfad_unsigned=/home/gluon/firmware-unsigned-rsk/siegburg/
-        site_code=siegburg
+        site_code=su
         firmware_pfad_signed=/home/gluon/firmware-signed-rsk/siegburg/;;
     *)
         echo "Keine gültige Auswahl für Community!"
@@ -146,9 +146,15 @@ case $input_feature in
                 git checkout $gluon_version
                 git pull origin $gluon_version
                 #Update Site.conf
-                cd "$gluon_pfad""site-$community"
+                if [ "$gluon_pfad" = "/home/gluon/gluon-rsk/" ]; then
+                	cd "$gluon_pfad""site"
+                	git checkout $community-$site_version
+                	git pull origin $community-$site_version
+                else
+                cd "$gluon_pfad""site"
                 git checkout $site_version
-                git pull origin $site_version;;
+                git pull origin $site_version
+            fi;;
             n*)
                 echo -e "Es werden keine Updates eingespielt!";;
         esac
@@ -156,10 +162,10 @@ case $input_feature in
 #        make dirclean
         #Firmware Bauen
         make update
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version GLUON_SITEDIR=site-$community/
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
 #        if [ $branch = experimental ]; then
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version GLUON_SITEDIR=site-$community/
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version GLUON_SITEDIR=site-$community/
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch-$input_version
 #        fi
         make manifest GLUON_BRANCH=$branch
         #Firmware Images Kopieren
