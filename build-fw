@@ -213,9 +213,9 @@ case $input_feature in
         rm -rf "$firmware_pfad_signed""$branch"
         cp -R "$firmware_pfad_unsigned""$branch" "$firmware_pfad_signed""$branch"
     ####x86 Images in Zip Archiv packen ####
-        cd "$firmware_pfad_signed""$branch"/factory/
-        zip gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-images gluon-$site_code-$gluon_version_name-$branch-"$input_version"-x86-*
-        rm gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-*
+#        cd "$firmware_pfad_signed""$branch"/factory/
+#        zip gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-images gluon-$site_code-$gluon_version_name-$branch-"$input_version"-x86-*
+#        rm gluon-$site_code-$gluon_version_name-$branch-$input_version-x86-*
         if [ $community = troisdorf ]; then
             rsync $rsync_opt $firmware_pfad_signed root@10.0.0.75:/var/www/images.freifunk-troisdorf.de/firmware
             rsync $rsync_opt --exclude=/latest $firmware_pfad_signed fwupload@update2.infra.fftdf:~/www
