@@ -16,7 +16,7 @@ echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
 echo -e "[t]roisdorf, [h]ennef, [s]ankt Augustin, [l]ohmar, [n]iederkassel, [si]egburg:"
 read input_community
-echo -e "Firmware [b]auen, [s]ignieren, [f]reigeben oder s[y]nc:"
+echo -e "Firmware [b]auen, [s]ignieren oder s[y]nc:"
 read input_feature
 
 # Wenn "cleaning" ausgewählt wurde, können Eingaben zu Branch und Version
@@ -25,12 +25,6 @@ read input_feature
 if [ "$input_feature" == "s" ]; then
     echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
     read input_branch
-fi
-if [ "$input_feature" == "f" ]; then
-    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
-    read input_branch
-    echo -e "Welche Version? (Nur für Bauen nötig)"
-    read input_version
 fi
 if [ "$input_feature" == "b" ]; then
     echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
