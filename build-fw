@@ -175,7 +175,6 @@ case $input_feature in
                 echo -e "Es wurden keine Tags erstellt!"
                 echo -e "Firmware im Branch: $branch wurde in Version $input_version gebaut.";;
         esac
-        ;;
     	fi
     
     #### Firmware signieren ####
