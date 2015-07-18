@@ -175,7 +175,7 @@ case $input_feature in
                 echo -e "Es wurden keine Tags erstellt!"
                 echo -e "Firmware im Branch: $branch wurde in Version $input_version gebaut.";;
         esac
-        ./slackbot_build_'$branch'.sh
+        /home/gluon/slackbot_build_'$branch'.sh
     	fi;;
     	
     
@@ -183,7 +183,7 @@ case $input_feature in
     signieren*|s*)
         "$gluon_pfad"contrib/sign.sh ~/firmwarekey "$firmware_pfad""$branch"/sysupgrade/"$branch".manifest
         echo -e "Die Firmware aus dem Branch $branch wurde erfolgreich signiert!"
-        ./slackbot_signed_'$branch'.sh;;
+        /home/gluon/slackbot_signed_'$branch'.sh;;
 
     #### Syncronisieren ####
     sync*|y*)
