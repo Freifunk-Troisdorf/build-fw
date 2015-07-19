@@ -153,7 +153,7 @@ case $input_feature in
         cp -r "$gluon_pfad"images "$firmware_pfad""$branch"
         rm -rf "$gluon_pfad"images
         chmod 775 -R "$firmware_pfad""$branch"/
-        if [community = troisdorf]; then
+        if [ $community = troisdorf]; then
         echo -e "Aktuelle Firmware in github taggen? [j/n]"
         read tag
         case $tag in
@@ -183,7 +183,7 @@ case $input_feature in
     signieren*|s*)
         "$gluon_pfad"contrib/sign.sh ~/firmwarekey "$firmware_pfad""$branch"/sysupgrade/"$branch".manifest
         echo -e "Die Firmware aus dem Branch $branch wurde erfolgreich signiert!"
-        if [ community = troisdorf ]; then
+        if [ $community = troisdorf ]; then
         /home/gluon/slackbot_signed_$branch.sh
         fi;;
 
