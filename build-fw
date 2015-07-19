@@ -183,7 +183,9 @@ case $input_feature in
     signieren*|s*)
         "$gluon_pfad"contrib/sign.sh ~/firmwarekey "$firmware_pfad""$branch"/sysupgrade/"$branch".manifest
         echo -e "Die Firmware aus dem Branch $branch wurde erfolgreich signiert!"
-        /home/gluon/slackbot_signed_$branch.sh;;
+        if [community = troisdorf]; then
+        /home/gluon/slackbot_signed_$branch.sh
+        fi;;
 
     #### Syncronisieren ####
     sync*|y*)
