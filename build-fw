@@ -158,7 +158,7 @@ case $input_feature in
         cd "$firmware_pfad""$branch"/factory/
         zip x86_images-$gluon_version_name-$branch_name-$input_version *.img *.img.gz *.vdi *.vmdk
         chmod 775 -R "$firmware_pfad""$branch"/
-        if [ $community = troisdorf]; then
+        if [ $community = troisdorf ]; then
         echo -e "Aktuelle Firmware in github taggen? [j/n]"
         read tag
         case $tag in
