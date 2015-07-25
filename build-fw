@@ -155,7 +155,7 @@ case $input_feature in
         rm -rf "$firmware_pfad""$branch"
         cp -r "$gluon_pfad"images "$firmware_pfad""$branch"
         rm -rf "$gluon_pfad"images
-        cd "$firmware_pfad""$branch"
+        cd "$firmware_pfad""$branch"factory/
         zip x86_images-$gluon_version_name-$branch_name-$input_version *.img *.img.gz *.vdi *.vmdk
         chmod 775 -R "$firmware_pfad""$branch"/
         if [ $community = troisdorf]; then
