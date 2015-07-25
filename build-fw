@@ -156,7 +156,7 @@ case $input_feature in
         cp -r "$gluon_pfad"images "$firmware_pfad""$branch"
         rm -rf "$gluon_pfad"images
         cd "$firmware_pfad""$branch"/factory/
-        zip x86_images-$gluon_version_name-$branch_name-$input_version *.img *.img.gz *.vdi *.vmdk
+        zip x86_images-$gluon_version_name-$branch_name-$input_version.zip *.img *.img.gz *.vdi *.vmdk
         chmod 775 -R "$firmware_pfad""$branch"/
         if [ $community = troisdorf ]; then
         echo -e "Aktuelle Firmware in github taggen? [j/n]"
