@@ -100,9 +100,9 @@ case $input_branch in
         branch=beta
         branch_name=beta;;
     experimental*|e*)
-        gluon_version=master
-        site_version=v2015.1
-        gluon_version_name=master
+        gluon_version=v2015.1.2
+        site_version=v2015.1.2
+        gluon_version_name=v2015.1.2
         branch=experimental
         branch_name=exp;;
     *)
