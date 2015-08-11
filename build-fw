@@ -88,15 +88,15 @@ esac
 
 case $input_branch in
     stable*|s*)
-        gluon_version=v2015.1.1
+        gluon_version=v2015.1.2
         site_version=v2015.1
-        gluon_version_name=2015.1.1
+        gluon_version_name=2015.1.2
         branch=stable
         branch_name=stable;;
     beta*|b*)
-        gluon_version=v2015.1.1
+        gluon_version=v2015.1.2
         site_version=v2015.1
-        gluon_version_name=2015.1.1
+        gluon_version_name=2015.1.2
         branch=beta
         branch_name=beta;;
     experimental*|e*)
