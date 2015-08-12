@@ -152,14 +152,13 @@ case $input_feature in
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=mpc85xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version
-        
-        mpc85xx-generic
         make manifest GLUON_BRANCH=$branch
         #Firmware Images Kopieren
         rm -rf "$firmware_pfad""$branch"
         cp -r "$gluon_pfad"images "$firmware_pfad""$branch"
         rm -rf "$gluon_pfad"images
         cd "$firmware_pfad""$branch"/factory/
+        #x86 Images Zippen
         zip x86_images-$gluon_version_name-$branch_name-$input_version.zip *.img *.img.gz *.vdi *.vmdk
         chmod 775 -R "$firmware_pfad""$branch"/
         if [ $community = troisdorf ]; then
