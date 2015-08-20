@@ -110,6 +110,12 @@ case $input_branch in
         gluon_version_name=v2015.1.2
         branch=experimental
         branch_name=exp;;
+    froscon*|f*)
+        gluon_version=v2015.1.2
+        site_version=froscon
+        gluon_version_name=v2015.1.2
+        branch=froscon
+        branch_name=froscon;;
     *)
         echo "Keine gültige Auswahl für Branch!"
         exit 1;;
