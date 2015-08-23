@@ -23,7 +23,7 @@ read input_feature
 # ignoriert werden. Setze dazu diese Werte auf "save values". Bei allen
 # anderen Tasks/Features wird der User nach den Eingaben gefragt.
 if [ "$input_feature" == "s" ]; then
-    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
+    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental, e[v]ent"
     read input_branch
 fi
 if [ "$input_feature" == "b" ]; then
@@ -110,12 +110,12 @@ case $input_branch in
         gluon_version_name=v2015.1.2
         branch=experimental
         branch_name=exp;;
-    froscon*|f*)
+    event*|v*)
         gluon_version=v2015.1.2
-        site_version=froscon
+        site_version=event
         gluon_version_name=v2015.1.2
-        branch=froscon
-        branch_name=froscon;;
+        branch=event
+        branch_name=event;;
     *)
         echo "Keine gültige Auswahl für Branch!"
         exit 1;;
