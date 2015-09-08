@@ -27,7 +27,7 @@ if [ "$input_feature" == "s" ]; then
     read input_branch
 fi
 if [ "$input_feature" == "b" ]; then
-    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental"
+    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental, e[v]ent"
     read input_branch
     echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
     read input_version
