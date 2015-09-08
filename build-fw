@@ -216,7 +216,7 @@ case $input_feature in
         fi
         
             rsync $rsync_opt /home/gluon/firmware/ root@10.0.0.75:/var/www/firmware
-            rsync $rsync_opt /home/gluon/firmware/ fwupload@46.4.138.183:/srv/fwuploads
+            rsync $rsync_opt -e "ssh -p 2222" /home/gluon/firmware/ fwupload@46.4.138.183:/srv/fwuploads
             rsync $rsync_opt /home/gluon/firmware/troisdorf/ fwupload@update2.infra.fftdf:~/www
             ;;              
 	esac
