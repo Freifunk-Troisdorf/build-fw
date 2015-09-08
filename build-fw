@@ -214,8 +214,10 @@ case $input_feature in
         else
             echo "User Gluon erkannt!"
         fi
+        
             rsync $rsync_opt /home/gluon/firmware/ root@10.0.0.75:/var/www/firmware
             rsync $rsync_opt /home/gluon/firmware/troisdorf/ fwupload@update2.infra.fftdf:~/www
+            rsync $rsync_opt /home/gluon/firmware/ fwupload@46.4.138.183:/srv/fwuploads
             ;;              
 	esac
 
