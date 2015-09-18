@@ -97,24 +97,28 @@ case $input_branch in
         site_version=v2015.1
         gluon_version_name=2015.1.2
         branch=stable
+        gluon_options=""
         branch_name=stable;;
     beta*|b*)
         gluon_version=v2015.1.2
         site_version=v2015.1
         gluon_version_name=2015.1.2
         branch=beta
+        gluon_options=""
         branch_name=beta;;
     experimental*|e*)
         gluon_version=v2015.1.2
         site_version=v2015.1
         gluon_version_name=v2015.1.2
         branch=experimental
+        gluon_options="BROKEN=1"
         branch_name=exp;;
     event*|v*)
         gluon_version=v2015.1.2
         site_version=event
         gluon_version_name=v2015.1.2
         branch=event
+        gluon_options="BROKEN=1"
         branch_name=event;;
     *)
         echo "Keine gültige Auswahl für Branch!"
@@ -158,11 +162,11 @@ case $input_feature in
         cd $gluon_pfad
         #Firmware Bauen
         make update
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-nand DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=mpc85xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version
-        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-nand DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=mpc85xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
         make manifest GLUON_BRANCH=$branch
         #Firmware Images Kopieren
         rm -rf "$firmware_pfad""$branch"
