@@ -23,11 +23,11 @@ read input_feature
 # ignoriert werden. Setze dazu diese Werte auf "save values". Bei allen
 # anderen Tasks/Features wird der User nach den Eingaben gefragt.
 if [ "$input_feature" == "s" ]; then
-    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental, e[v]ent"
+    echo -e "ranch auswählen: [s]table, [b]eta, [e]xperimental, e[v]ent, [f]utro"
     read input_branch
 fi
 if [ "$input_feature" == "b" ]; then
-    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental, e[v]ent"
+    echo -e "Branch auswählen: [s]table, [b]eta, [e]xperimental, e[v]ent, [f]utro"
     read input_branch
     echo -e "Neue Versionsnummer? (Nur für Bauen nötig)"
     read input_version
@@ -125,6 +125,13 @@ case $input_branch in
         branch=event
         gluon_options="BROKEN=1"
         branch_name=event;;
+    futro*|f*)
+        gluon_version=v2015.1.2
+        site_version=futro
+        gluon_version_name=v2015.1.2
+        branch=futro
+        gluon_options="BROKEN=1"
+        branch_name=futro;;
     *)
         echo "Keine gültige Auswahl für Branch!"
         exit 1;;
@@ -167,11 +174,15 @@ case $input_feature in
         cd $gluon_pfad
         #Firmware Bauen
         make update
-        make -j4 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
-        make -j4 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-nand DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
-        make -j4 GLUON_BRANCH=$branch GLUON_TARGET=mpc85xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
-        make -j4 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
-        make -j4 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        if [[ "$input_branch" = "futro"]]; then
+        	make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        else
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-nand DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=mpc85xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+        make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
+    	fi;;
         make manifest GLUON_BRANCH=$branch
         #Firmware Images Kopieren
         rm -rf "$firmware_pfad""$branch"
