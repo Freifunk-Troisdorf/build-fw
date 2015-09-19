@@ -14,7 +14,7 @@ done
 # Benutzerabfragen
 echo -e "Freifunk Firmware Tool\n"
 echo -e "Community Wählen:\n"
-echo -e "[t]roisdorf, [h]ennef, [sa]nkt Augustin, [l]ohmar, [n]iederkassel, [si]egburg, [r]heinbach:"
+echo -e "[t]roisdorf, [h]ennef, [sa]nkt Augustin, [l]ohmar, [n]iederkassel, [si]egburg, [r]heinbach, [w]achtberg:"
 read input_community
 echo -e "Firmware [b]auen, [s]ignieren oder s[y]nc:"
 read input_feature
@@ -86,6 +86,11 @@ case $input_community in
         gluon_pfad=/home/gluon/gluon-rsk/
         site_code=su
         firmware_pfad=/home/gluon/firmware/rheinbach/;;
+     wachtberg*|w*)
+        community=wachtberg
+        gluon_pfad=/home/gluon/gluon-rsk/
+        site_code=su
+        firmware_pfad=/home/gluon/firmware/wachtberg/;;
     *)
         echo "Keine gültige Auswahl für Community!"
         exit 1;;
