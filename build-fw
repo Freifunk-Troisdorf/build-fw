@@ -174,7 +174,7 @@ case $input_feature in
         cd $gluon_pfad
         #Firmware Bauen
         make update
-        if [[ "$input_branch" = "futro"]]; then
+        if [ "$input_branch" = "futro" ]; then
         	make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
         else
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=ar71xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
