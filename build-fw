@@ -184,7 +184,6 @@ case $input_feature in
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
     	fi;;
         make manifest GLUON_BRANCH=$branch
-
         #Firmware Images Kopieren
         rm -rf "$firmware_pfad""$branch"
         cp -r "$gluon_pfad"images "$firmware_pfad""$branch"
@@ -192,13 +191,11 @@ case $input_feature in
         cd "$firmware_pfad""$branch"/factory/
         #x86 Images Zippen
         zip x86_images-$gluon_version_name-$branch_name-$input_version.zip *.img *.img.gz *.vdi *.vmdk
-
         #Firmware Dateien Signieren
         sha512sum "$firmware_pfad""§branch"/factory/* > "$firmware_pfad""§branch"/factory/SHA512SUMS
         sha512sum "$firmware_pfad""§branch"/sysupgrade/* > "$firmware_pfad""§branch"/sysupgrade/SHA512SUMS
         gpg --sign "$firmware_pfad""§branch"/factory/SHA512SUMS
         gpg --sign "$firmware_pfad""§branch"/sysupgrade/SHA512SUMS
-
         chmod 775 -R "$firmware_pfad""$branch"/
         if [ $community = troisdorf ]; then
         echo -e "Aktuelle Firmware in github taggen? [j/n]"
