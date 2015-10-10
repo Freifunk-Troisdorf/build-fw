@@ -112,7 +112,7 @@ case $input_branch in
         gluon_options=""
         branch_name=beta;;
     experimental*|e*)
-        gluon_version=v2015.1.2
+        gluon_version=master
         site_version=v2015.2
         gluon_version_name=master
         branch=experimental
@@ -182,9 +182,8 @@ case $input_feature in
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=mpc85xx-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-generic DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
         make -j5 GLUON_BRANCH=$branch GLUON_TARGET=x86-kvm_guest DEFAULT_GLUON_RELEASE=$gluon_version_name-$branch_name-$input_version $gluon_options
-    	fi;;
+    	fi
         make manifest GLUON_BRANCH=$branch
-        #Firmware Images Kopieren
         rm -rf "$firmware_pfad""$branch"
         cp -r "$gluon_pfad"images "$firmware_pfad""$branch"
         rm -rf "$gluon_pfad"images
