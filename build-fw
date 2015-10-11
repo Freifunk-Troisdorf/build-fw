@@ -114,7 +114,7 @@ case $input_branch in
     experimental*|e*)
         gluon_version=master
         site_version=v2015.2
-        gluon_version_name=master
+        gluon_version_name=v2015.2
         branch=experimental
         gluon_options="BROKEN=1"
         branch_name=exp;;
