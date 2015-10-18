@@ -156,7 +156,6 @@ case $input_feature in
                 echo -e "Repositorys werden Aktualisiert"
                 #Update Gluon
                 cd $gluon_pfad
-                git pull
                 git checkout $gluon_version
                 git pull origin $gluon_version
                 #Update Site.conf
