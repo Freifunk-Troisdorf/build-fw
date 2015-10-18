@@ -162,7 +162,6 @@ case $input_feature in
                 #Update Site.conf
                 if [ "$gluon_pfad" = "/home/gluon/gluon-rsk/" ]; then
                 	cd "$gluon_pfad""site"
-                	git pull
                 	git checkout $community-$site_version
                 	git pull origin $community-$site_version
                 else
