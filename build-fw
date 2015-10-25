@@ -126,8 +126,8 @@ case $input_branch in
         gluon_options="BROKEN=1"
         branch_name=event;;
     futro*|f*)
-        gluon_version=v2015.2
-        site_version=v2015.2futro
+        gluon_version=master
+        site_version=v2015.2-futro
         gluon_version_name=v2015.2
         branch=futro
         gluon_options="BROKEN=1"
