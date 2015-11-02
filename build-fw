@@ -192,6 +192,7 @@ case $input_feature in
         else
         cp -r "$gluon_pfad"images "$firmware_pfad""$branch"
         rm -rf "$gluon_pfad"images
+        fi
         cd "$firmware_pfad""$branch"/factory/
         #Firmware Dateien Signieren
         sha512sum "$firmware_pfad""$branch"/factory/* > "$firmware_pfad""$branch"/factory/SHA512SUMS
