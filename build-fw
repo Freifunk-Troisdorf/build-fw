@@ -189,8 +189,6 @@ case $input_feature in
         cp -r "$gluon_pfad"images "$firmware_pfad""$branch"
         rm -rf "$gluon_pfad"images
         cd "$firmware_pfad""$branch"/factory/
-        #x86 Images Zippen
-        zip x86_images-$gluon_version_name-$branch_name-$input_version.zip *.img *.img.gz *.vdi *.vmdk
         #Firmware Dateien Signieren
         sha512sum "$firmware_pfad""$branch"/factory/* > "$firmware_pfad""$branch"/factory/SHA512SUMS
         sha512sum "$firmware_pfad""$branch"/sysupgrade/* > "$firmware_pfad""$branch"/sysupgrade/SHA512SUMS
