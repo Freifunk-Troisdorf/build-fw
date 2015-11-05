@@ -186,7 +186,7 @@ case $input_feature in
     	fi
         make manifest GLUON_BRANCH=$branch
         rm -rf "$firmware_pfad""$branch"
-        if [ "$branch" = "experimantal" ]; then
+        if [ "$branch" = "experimental" ]; then
  		cp -r "$gluon_pfad"output/images "$firmware_pfad""$branch"
         	rm -rf "$gluon_pfad"output/images
         else
