@@ -106,7 +106,7 @@ case $input_branch in
         branch_name=stable;;
     beta*|b*)
         gluon_version=v2015.1.2
-        site_version=v2015.1
+        site_version=v2015.1-l2tp
         gluon_version_name=2015.1.2
         branch=beta
         gluon_options=""
